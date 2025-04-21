@@ -4,17 +4,26 @@
 #include <ctime>
 
 struct Seed{
-    char* name;
+    const char* name;
     int TimeGrowth;
     int harvest;
-    int cost;
+    int BuyCost;
+    int SellCost;
+    int Number;
 };
 
-class Garden {
-    private:
-        time_t TimeLanding;
+struct Vegatebles {
+    const char* name;
+    int SellCost;
+    int Number;
+    int amount;  //ЧТО ЭТО ???
+};
+
+class SeedBed {
     public:
-        bool buse;
+        time_t TimeLanding;
+        Seed yes;
+        bool buse; //занято?
 };
 
 void garden();
