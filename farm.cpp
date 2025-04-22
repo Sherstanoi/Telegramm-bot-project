@@ -24,15 +24,15 @@ SeedBed AllSeedBad[LotSeedBed];  //Инфа
 
 
 void start(){
-    AllSeed[0].name = "Пшено";   AllSeed[0].TimeGrowth = 10; AllSeed[0].BuyCost = 4; AllSeed[0].SellCost = 3; AllSeed[0].Number = 0;
-    AllSeed[1].name = "Морковка";AllSeed[1].TimeGrowth = 20; AllSeed[1].BuyCost = 2; AllSeed[1].SellCost = 1; AllSeed[1].Number = 1;
-    AllSeed[2].name = "Свекла";  AllSeed[2].TimeGrowth = 30; AllSeed[2].BuyCost = 6; AllSeed[2].SellCost = 5; AllSeed[2].Number = 2;
-    AllSeed[3].name = "Тыква";   AllSeed[3].TimeGrowth = 60; AllSeed[3].BuyCost = 12;AllSeed[3].SellCost = 10;AllSeed[3].Number = 3;
+    AllSeed[0].name = "Пшено";    AllSeed[0].TimeGrowth = 10; AllSeed[0].BuyCost = 4;  AllSeed[0].SellCost = 3;  AllSeed[0].Number = 0;
+    AllSeed[1].name = "Морковка"; AllSeed[1].TimeGrowth = 20; AllSeed[1].BuyCost = 2;  AllSeed[1].SellCost = 1;  AllSeed[1].Number = 1;
+    AllSeed[2].name = "Свекла";   AllSeed[2].TimeGrowth = 30; AllSeed[2].BuyCost = 6;  AllSeed[2].SellCost = 5;  AllSeed[2].Number = 2;
+    AllSeed[3].name = "Тыква";    AllSeed[3].TimeGrowth = 60; AllSeed[3].BuyCost = 12; AllSeed[3].SellCost = 10; AllSeed[3].Number = 3;
 
-    AllVegatebles[0].name = "Пшено";   AllVegatebles[0].SellCost = 6; AllVegatebles[0].Number = 0;
-    AllVegatebles[1].name = "Морковка";AllVegatebles[1].SellCost = 4; AllVegatebles[1].Number = 1;
-    AllVegatebles[2].name = "Свекла";  AllVegatebles[2].SellCost = 10;AllVegatebles[2].Number = 2;
-    AllVegatebles[3].name = "Тыква";   AllVegatebles[3].SellCost = 20;AllVegatebles[3].Number = 3;
+    AllVegatebles[0].name = "Пшено";    AllVegatebles[0].SellCost = 6;  AllVegatebles[0].Number = 0;
+    AllVegatebles[1].name = "Морковка"; AllVegatebles[1].SellCost = 4;  AllVegatebles[1].Number = 1;
+    AllVegatebles[2].name = "Свекла";   AllVegatebles[2].SellCost = 10; AllVegatebles[2].Number = 2;
+    AllVegatebles[3].name = "Тыква";    AllVegatebles[3].SellCost = 20; AllVegatebles[3].Number = 3;
 }
 
 void storehouse(){
@@ -45,9 +45,10 @@ void storehouse(){
             }
         }
     }
+    std::cout << AllYouVagetebles << '\n';
     if (AllYouVagetebles != 0) {
         for (int i = 0; i < ListSeed; i++) {
-            if (YourSeeds[i] != 0){
+            if (YourVegatebles[i] != 0){
                 std::cout << YourVegatebles[i] << ' ' << AllVegatebles[i].name << '\n';
             }
         }
@@ -60,7 +61,8 @@ void shop() {
         for (int i = 0; i < ListSeed; i++) {
             std::cout << i + 1 <<") " <<  AllSeed[i].name << ' ' << AllSeed[i].BuyCost << '\n';
         }
-        std::cout << "Вы хотите:\n(1) купить\n(2) продать\n(3) выйти из магазина: \n";
+
+        std::cout << "Вы хотите:\n1) купить\n2) продать\n3) выйти из магазина: \n";
         int way = 0;
         std::cin >> way;
         switch (way) {
@@ -106,10 +108,10 @@ void gardenOut() {
     time_t timeNow = time (NULL);
     for(int i = 0; i < ListSeedBed; i++){
         if (AllSeedBad[i].buse) {
-            if (AllSeedBad[i].yes.TimeGrowth - timeNow + AllSeedBad[i].TimeLanding > 0){
-                std::cout << "🪺 " << AllSeedBad[i].yes.name << " осталось до полного созревания " << AllSeedBad[i].yes.TimeGrowth - timeNow + AllSeedBad[i].TimeLanding << '\n';
+            if (AllSeed[AllSeedBad[i].NumberSeed].TimeGrowth - timeNow + AllSeedBad[i].TimeLanding > 0){
+                std::cout << "🪺 " << AllSeed[AllSeedBad[i].NumberSeed].name << " осталось до полного созревания " << AllSeed[AllSeedBad[i].NumberSeed].TimeGrowth - timeNow + AllSeedBad[i].TimeLanding << '\n';
             } else {
-                std::cout << "🪺 " << AllSeedBad[i].yes.name << " созрел\n";
+                std::cout << "🪺 " << AllSeed[AllSeedBad[i].NumberSeed].name << " созрел\n";
             }
         }else {
             std::cout << "🪹 \n";
@@ -120,6 +122,7 @@ void gardenOut() {
 void garden(){
     while(true) {
         gardenOut();
+
         if (AllYouSeed != 0) {
             std::cout << "семена ";
             for (int i = 0; i < ListSeed; i++) {
@@ -147,7 +150,7 @@ void garden(){
                 for(int i = 0; lot != 0 && i < ListSeedBed; i++){
                     if (!AllSeedBad[i].buse){
                         AllSeedBad[i].buse = true;
-                        AllSeedBad[i].yes = AllSeed[ind];
+                        AllSeedBad[i].NumberSeed = ind;
                         AllSeedBad[i].TimeLanding = time (NULL);
                         lot--;
                         YourSeeds[ind]--;
@@ -157,9 +160,10 @@ void garden(){
             }
             case 3:{
                 for(int i = 0; i < ListSeedBed; i++) {
-                    if (AllSeedBad[i].yes.TimeGrowth - time (NULL) + AllSeedBad[i].TimeLanding > 0) {
+                    std::cout << AllYouVagetebles << '\n';
+                    if (AllSeed[AllSeedBad[i].NumberSeed].TimeGrowth - time (NULL) + AllSeedBad[i].TimeLanding <= 0) {
                         AllSeedBad[i].buse = false;
-                        YourVegatebles[AllSeedBad[i].yes.Number]++;
+                        YourVegatebles[AllSeed[AllSeedBad[i].NumberSeed].Number]++;
                         AllYouVagetebles++;
                     }
                 }
@@ -211,21 +215,3 @@ void basicFarm() {
         }
     }
 }
-/*****************************************
-void time() {
-    while (true){
-        int kolichestvo_dney;
-
-        time_new = time (NULL);
-        //kolichestvo_dney = (time_new/3600)/24;
-        std::cout << "Сейчас: " << asctime(localtime(&time_new)) << "\nс прошлого обновления прошло: " << time_new - time_old << '\n';
-        time_old = time_new;
-        std::cin.get();
-        char a;
-        std::cin >> a;
-        if (a == 'y') {
-            break;
-        }
-    }
-}
-*/
