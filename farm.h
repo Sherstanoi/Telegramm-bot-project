@@ -6,7 +6,6 @@
 struct Seed{
     const char* name;
     int TimeGrowth;
-    int harvest;
     int BuyCost;
     int SellCost;
     int Number;
@@ -21,8 +20,8 @@ struct Vegatebles {
 
 class SeedBed {
     public:
-        time_t TimeLanding;
-        Seed yes;
+        time_t TimeLanding; //функция
+        int NumberSeed;
         bool buse; //занято?
 };
 
