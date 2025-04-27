@@ -7,7 +7,7 @@ int main() {
         bot.getApi().sendMessage(message->chat->id, "Здравствуйте! Добро пожаловать в Громбург! Его основатели - великие кододелы, их имена войдут в историю! И Они жесть какие крутые! здесь будет их игра, кстати");
     });
     bot.getEvents().onCommand("truth", [&bot](TgBot::Message::Ptr message) {
-        bot.getApi().sendMessage(message->chat->id, "Ты(Женя) - самое прекрасное на свете создание! Я,создатель этого бота, искренне люблю тебя! Спасибо. что ты есть <3");
+        bot.getApi().sendMessage(message->chat->id, "Ты (Женя) - самое прекрасное на свете создание! Я,создатель этого бота, искренне люблю тебя! Спасибо. что ты есть <3");
     });
     bot.getEvents().onAnyMessage([&bot](TgBot::Message::Ptr message) {
         printf("User wrote %s\n", message->text.c_str());
