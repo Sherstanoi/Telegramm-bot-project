@@ -4,6 +4,8 @@
 #include <fstream>
 #include <iostream>
 #include <ctime>
+#include <cmath>
+#include <iomanip>
 
 int money = 200;
 
@@ -11,14 +13,12 @@ int ListSeed = 4; //количество доступных семян
 const int LotSeed = 7; // максимум семян(для после прокачки)
 
 Seed AllSeed[LotSeed]; // информация семян
-int YourSeeds[LotSeed];// количество каждого вида
-int AllYouSeed = 0;    // всего семян
+int AllYouSeed = 0;    // всего семян.121
 
 Vegatebles AllVegatebles[LotSeed]; // информация готовых овощей
-int YourVegatebles [LotSeed]; // количество каждого вида
 int AllYouVagetebles = 0;     // все овощи
 
-int ListSeedBed = 5;             //количество грядок🪺🪹
+int ListSeedBed = 5;             //количество грядок
 const int LotSeedBed = 8;        //максимум грядок
 SeedBed AllSeedBad[LotSeedBed];  //Инфа
 
@@ -41,29 +41,34 @@ void storehouse(){
     if (AllYouSeed != 0) {
         std::cout << "Ваши семена:\n";
         for (int i = 0; i < ListSeed; i++) {
-            if (YourSeeds[i] != 0){
-                std::cout << YourSeeds[i] << ": " << AllSeed[i].name << '\n';
+            if (AllSeed[i].amount != 0){
+                std::cout << AllSeed[i].amount << ": " << AllSeed[i].name << '\n';
             }
         }
     }
     if (AllYouVagetebles != 0) {
         std::cout << "\nВаши овощи:\n";
         for (int i = 0; i < ListSeed; i++) {
-            if (YourVegatebles[i] != 0){
-                std::cout << YourVegatebles[i] << ": " << AllVegatebles[i].name << '\n\n';
+            if (AllVegatebles[i].amount != 0){
+                std::cout << AllVegatebles[i].amount << ": " << AllVegatebles[i].name << '\n\n';
             }
         }
     }
 }
 
-void shop() {
-    storehouse();
-    while (true) {
-        std::cout << "Вы в магазине тут можно типо покупать и продавать семена и другую хрень которой пока нет\n вот что y нас есть: \n";
-        for (int i = 0; i < ListSeed; i++) {
-            std::cout << i + 1 <<") " <<  AllSeed[i].name << ' ' << AllSeed[i].BuyCost << '\n';
-        }
+void shopOut() {
+    const int kLengthColumn = 20;
+    const int kPrecision = 10;
+    std::cout << std::setw(15) << "вид" << ' ' << '\n';//<< std::setw(kLengthColumn) << " стоимость семечка (продажа/покупка)" << std::setw(kLengthColumn) << " у вас семечек" << std::setw(kLengthColumn) << " стоимость овоща" << std::setw(kLengthColumn) << " у вас овощей" << std::endl;
 
+    for (int i = 0; i < ListSeed; i++) {
+        std::cout  << std::setw(15) << AllVegatebles[i].name << ' ' << '\n';//<< std::setw(kLengthColumn) << AllSeed[i].SellCost << '/' << AllSeed[i].BuyCost << std::setw(kLengthColumn) << AllSeed[i].amount << std::setw(kLengthColumn) << AllVegatebles[i].SellCost << std::setw(kLengthColumn) << AllVegatebles[i].amount << std::endl;
+    }
+}
+
+void shop() {
+    while (true) {
+        shopOut();
         std::cout << "Вы хотите:\n1) купить\n2) продать семена\n3) продать овощи\n4) выйти из магазина: \n";
         int way = 0;
         std::cin >> way;
@@ -74,7 +79,7 @@ void shop() {
                 std::cin >> ind >> lot;
                 if (ind > 0 && ind <= ListSeed && lot > 0 && AllSeed[ind - 1].BuyCost * lot <= money) {
                     money -= AllSeed[ind - 1].BuyCost * lot;
-                    YourSeeds[ind - 1] += lot;
+                    AllSeed[ind - 1].amount += lot;
                     AllYouSeed += lot;
                 } else {
                     std::cout << "ошибка ввода лол или что то другое не так";
@@ -85,9 +90,9 @@ void shop() {
                 std::cout << "Введите номер продукта и количество: ";
                 int ind = 0, lot = 0;
                 std::cin >> ind >> lot;
-                if (ind > 0 && ind <= ListSeed && lot > 0 && YourSeeds[ind - 1] >= lot) {
+                if (ind > 0 && ind <= ListSeed && lot > 0 && AllSeed[ind - 1].amount >= lot) {
                     money += AllSeed[ind - 1].BuyCost * lot;
-                    YourSeeds[ind - 1] -= lot;
+                    AllSeed[ind - 1].amount -= lot;
                     AllYouSeed -= lot;
                 } else {
                     std::cout << "ошибка ввода лол или что то другое не так";
@@ -98,9 +103,9 @@ void shop() {
                 std::cout << "Введите номер продукта и количество: ";
                 int ind = 0, lot = 0;
                 std::cin >> ind >> lot;
-                if (ind > 0 && ind <= ListSeed && lot > 0 && YourVegatebles[ind - 1] >= lot) {
+                if (ind > 0 && ind <= ListSeed && lot > 0 && AllVegatebles[ind - 1].amount >= lot) {
                     money += AllVegatebles[ind - 1].SellCost * lot;
-                    YourVegatebles[ind - 1] -= lot;
+                    AllVegatebles[ind - 1].amount -= lot;
                     AllYouVagetebles -= lot;
                 } else {
                     std::cout << "ошибка ввода лол или что то другое не так";
@@ -142,8 +147,8 @@ void garden(){
             std::cout << "семена: \n";
             int nomber = 1;
             for (int i = 0; i < ListSeed; i++) {
-                if (YourSeeds[i] != 0){
-                    std::cout << nomber << ") " << AllSeed[i].name << ' ' << YourSeeds[i] << '\n';
+                if (AllSeed[i].amount != 0){
+                    std::cout << nomber << ") " << AllSeed[i].name << ' ' << AllSeed[i].amount << '\n';
                     nomber++;
                 }
             }
@@ -164,27 +169,30 @@ void garden(){
                 int ind = 0, lot = 0;
                 std::cin >> ind >> lot;
                 ind--;
+                if (ind < 0) {
+                    break;
+                }
                 for (int i = 0; i < ListSeed; i++) {
-                    if (YourSeeds[i] != 0 && ind != 0){
+                    if (AllSeed[i].amount != 0 && ind != 0){
                         ind--;
-                    } else if (YourSeeds[i] != 0) {
+                    } else if (AllSeed[i].amount != 0) {
                         ind = i;
                         break;
                     }
                 }
                 std::cout << ind << '\n';
 
-                if (YourSeeds[ind] == 0) {
+                if (AllSeed[ind].amount == 0) {
                     std::cout << "Вы чо ,у вас нет таких семян\n";
                     break;
                 }
                 for(int i = 0; lot > 0 && i < ListSeedBed; i++){
-                    if (!AllSeedBad[i].buse && YourSeeds[ind] > 0){
+                    if (!AllSeedBad[i].buse && AllSeed[ind].amount > 0){
                         AllSeedBad[i].buse = true;
                         AllSeedBad[i].NumberSeed = ind;
                         AllSeedBad[i].TimeLanding = time (NULL);
                         lot--;
-                        YourSeeds[ind]--;
+                        AllSeed[ind].amount--;
                         AllYouSeed--;
                     }
                 }
@@ -199,7 +207,7 @@ void garden(){
                     storehouse();
                     if (AllSeedBad[i].buse && AllSeed[AllSeedBad[i].NumberSeed].TimeGrowth - time (NULL) + AllSeedBad[i].TimeLanding <= 0) {
                         AllSeedBad[i].buse = false;
-                        YourVegatebles[AllSeed[AllSeedBad[i].NumberSeed].Number]++;
+                        AllVegatebles[AllSeed[AllSeedBad[i].NumberSeed].Number].amount++;
                         AllYouVagetebles++;
                     }
                 }

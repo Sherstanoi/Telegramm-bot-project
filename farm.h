@@ -9,13 +9,14 @@ struct Seed{
     int BuyCost;
     int SellCost;
     int Number;
+    int amount = 0;
 };
 
 struct Vegatebles {
     const char* name;
     int SellCost;
     int Number;
-    int amount;  //ЧТО ЭТО ???
+    int amount = 0;
 };
 
 class SeedBed {
