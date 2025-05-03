@@ -2,9 +2,9 @@
 #include <tgbot/tgbot.h>
 #include "farm.h"
 
-bool Flag1Test = false;
-bool Flag2Test = false;
-bool Flag3Test = true;
+bool Flag1 = false;
+bool Flag2 = false;
+bool Flag3 = true;
 
 void PrimtPLS(TgBot::Message::Ptr message) {
     TgBot::Bot bot("7614764220:AAFjCX5LYfb33qJ8-f7HMXbxAzfNGWVEuK8");
