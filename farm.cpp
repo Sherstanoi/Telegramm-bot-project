@@ -35,6 +35,38 @@ void start(){
     AllVegatables[3].name = "Тыква";    AllVegatables[3].SellCost = 20; AllVegatables[3].Number = 3;
 }
 
+void basicFarm() {
+    start();
+    while(true) {
+        std::cout << "БЛА БЛА БЛА ЛОР\nкyдa пойдем?\n 1) огород\n 2) магазин\n 3) амбар\n 4) выход наружу\n";
+        int way = 0;
+        std::cin >> way;
+        switch (way) {
+            case 1:{
+                garden();
+                break;
+            }
+            case 2:{
+                shop();
+                break;
+            }
+            case 3:{
+                storehouse();
+                break;
+            }
+            case 4:{
+                return;
+                break;
+            }
+            default:{
+                std::cout << "что то не так \n";
+                break;
+            }
+        }
+    }
+}
+
+
 void storehouse(){
     std::cout << "Вы амбаре тут хранится ваше имущество, если оно y вас есть)\ny вас\n";
     std::cout << money << '\n';
@@ -215,38 +247,6 @@ void garden(){
             }
             case 4:{
                 return ;
-            }
-            default:{
-                std::cout << "что то не так \n";
-                break;
-            }
-        }
-    }
-}
-
-
-void basicFarm() {
-    start();
-    while(true) {
-        std::cout << "БЛА БЛА БЛА ЛОР\nкyдa пойдем?\n 1) огород\n 2) магазин\n 3) амбар\n 4) выход наружу\n";
-        int way = 0;
-        std::cin >> way;
-        switch (way) {
-            case 1:{
-                garden();
-                break;
-            }
-            case 2:{
-                shop();
-                break;
-            }
-            case 3:{
-                storehouse();
-                break;
-            }
-            case 4:{
-                return;
-                break;
             }
             default:{
                 std::cout << "что то не так \n";
