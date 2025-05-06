@@ -2,9 +2,12 @@
 #include <fstream>
 #include <cstring>
 #include <ctime>
+#include <stdio.h>
+#include <tgbot/tgbot.h>
+#pragma once
 
 struct Seed{
-    const char* name;
+    const char* Name;
     int TimeGrowth;
     int BuyCost;
     int SellCost;
@@ -13,7 +16,7 @@ struct Seed{
 };
 
 struct Vegatebles {
-    const char* name;
+    const char* Name;
     int SellCost;
     int Number;
     int amount = 0;
@@ -26,8 +29,27 @@ class SeedBed {
         bool buse; //занято?
 };
 
-void garden();
-void shop();
-void storehouse();
-void basicFarm();
-void menu();
+void Start();
+void BasicFarm(TgBot::Message::Ptr message);
+
+void Garden(TgBot::Message::Ptr message);
+void PlantSeed(TgBot::Message::Ptr message);
+void Renew(TgBot::Message::Ptr message);
+void CollectAll(TgBot::Message::Ptr message);
+
+void Shop(TgBot::Message::Ptr message);
+void Buy(TgBot::Message::Ptr message);
+void SellSeeds(TgBot::Message::Ptr message);
+void SellVegetables(TgBot::Message::Ptr message);
+
+void Return();
+
+void Storehouse(TgBot::Message::Ptr message);
+
+
+namespace {
+    bool BasicFlag = false;
+    bool GardenFlag = false;
+    bool StorehouseFlag = false;
+    bool ShopFlag = false;
+}
