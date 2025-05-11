@@ -3,88 +3,53 @@
 #include "farm.h"
 
 void PrimtPLS(TgBot::Message::Ptr message) {
-    TgBot::Bot bot("7614764220:AAGAIgGzIBr5kFpaVnf4YA8QyRlkBbcHj0s");
+    TgBot::Bot bot("7590778478:AAF_Y2viQaAtczVc6xYu3NphxnFmrJh8vO8");
     bot.getApi().sendMessage(message->chat->id, "Your message is not not: ");
     BasicFlag = true;
 }
 int main() {
-    TgBot::Bot bot("7614764220:AAGAIgGzIBr5kFpaVnf4YA8QyRlkBbcHj0s"); // NONCommand(Как-то так)
+    TgBot::Bot bot("7590778478:AAF_Y2viQaAtczVc6xYu3NphxnFmrJh8vO8");
     bot.getEvents().onCommand("start", [&bot](TgBot::Message::Ptr message) {
-        bot.getApi().sendMessage(message->chat->id, "Здравствуйте! Добро пожаловать в Громбург! Его основатели - великие кододелы, их имена войдут в историю! И Они жесть какие крутые! здесь будет их игра, кстати");
+        bot.getApi().sendMessage(message->chat->id,"Вы всегда хотели переехать в уединенное место, поэтому вы долго копили деньги и купили домик в деревушке.И вот,наконец, вы приезжаете к своему новому дому");
         Start();
         BasicFarm(message);
         BasicFlag = true;
         GardenFlag = false;
         StorehouseFlag = false;
         ShopFlag = false;
-        // bot.getApi().sendMessage(message->chat->id, std::to_string(BasicFlag));
-        // for(int i = 0; i<5; ++i) {
-        //     bot.getApi().sendMessage(message->chat->id, "Здравствуйте! Добро пожаловать в Громбург! Его основатели - великие кододелы, их имена войдут в историю! И Они жесть какие крутые! здесь будет их игра, кстати");
-        // }
+
     });
 
     bot.getEvents().onCommand("огород", [&bot](TgBot::Message::Ptr message) {
         GardenFlag = true;
         if(BasicFlag) {
-            // bot.getEvents().onAnyMessage([&bot](TgBot::Message::Ptr message) {
-            //     printf("User wrote %s\n", message->text.c_str());
-            //     if (StringTools::startsWith(message->text, "/start") || StringTools::startsWith(message->text, "/truth") || !BasicFlag) {
-            //         return;
-            //     }
-            //     bot.getApi().sendMessage(message->chat->id, "Your message is not: " + message->text);
-            // });
             Garden(message);
-            PrimtPLS(message);
         } else {
             return;
         }
         BasicFlag = false;
     });
 
-    bot.getEvents().onCommand("обновить", [&bot](TgBot::Message::Ptr message) {
+    bot.getEvents().onCommand("проверить_растения", [&bot](TgBot::Message::Ptr message) {
         if(GardenFlag) {
-            // bot.getEvents().onAnyMessage([&bot](TgBot::Message::Ptr message) {
-            //     printf("User wrote %s\n", message->text.c_str());
-            //     if (StringTools::startsWith(message->text, "/start") || StringTools::startsWith(message->text, "/truth") || !BasicFlag) {
-            //         return;
-            //     }
-            //     bot.getApi().sendMessage(message->chat->id, "Your message is not: " + message->text);
-            // });
             Garden(message);
-            PrimtPLS(message);
         } else {
             return;
         }
-        BasicFlag = false;
     });
 
     bot.getEvents().onCommand("посадить_семена", [&bot](TgBot::Message::Ptr message) {
         if(GardenFlag) {
-            // bot.getEvents().onAnyMessage([&bot](TgBot::Message::Ptr message) {
-            //     printf("User wrote %s\n", message->text.c_str());
-            //     if (StringTools::startsWith(message->text, "/start") || StringTools::startsWith(message->text, "/truth") || !BasicFlag) {
-            //         return;
-            //     }
-            //     bot.getApi().sendMessage(message->chat->id, "Your message is not: " + message->text);
-            // });
-            PlantSeed(message);
-            PrimtPLS(message);
+            PlantSeedOut(message);
         } else {
             return;
         }
-        GardenFlag = false;
-        BasicFlag =true;
+        FirstStepInFlag = true;
+        ActionScenario = 3;
     });
 
-    bot.getEvents().onCommand("собрать всё", [&bot](TgBot::Message::Ptr message) {
+    bot.getEvents().onCommand("собрать_всё", [&bot](TgBot::Message::Ptr message) {
         if(GardenFlag) {
-            // bot.getEvents().onAnyMessage([&bot](TgBot::Message::Ptr message) {
-            //     printf("User wrote %s\n", message->text.c_str());
-            //     if (StringTools::startsWith(message->text, "/start") || StringTools::startsWith(message->text, "/truth") || !BasicFlag) {
-            //         return;
-            //     }
-            //     bot.getApi().sendMessage(message->chat->id, "Your message is not: " + message->text);
-            // });
             Garden(message);
             PrimtPLS(message);
         } else {
@@ -93,61 +58,305 @@ int main() {
         GardenFlag = false;
         BasicFlag =true;
     });
-
-    bot.getEvents().onCommand("обратно", [&bot](TgBot::Message::Ptr message) {
-        if(GardenFlag) {
-            // bot.getEvents().onAnyMessage([&bot](TgBot::Message::Ptr message) {
-            //     printf("User wrote %s\n", message->text.c_str());
-            //     if (StringTools::startsWith(message->text, "/start") || StringTools::startsWith(message->text, "/truth") || !BasicFlag) {
-            //         return;
-            //     }
-            //     bot.getApi().sendMessage(message->chat->id, "Your message is not: " + message->text);
-            // });
-            Garden(message);
-            PrimtPLS(message);
-        } else {
-            return;
-        }
-        BasicFlag = false;
-    });
-
 
     bot.getEvents().onCommand("амбар", [&bot](TgBot::Message::Ptr message) {
         StorehouseFlag = true;
         if(BasicFlag) {
-            // bot.getEvents().onAnyMessage([&bot](TgBot::Message::Ptr message) {
-            //     printf("User wrote %s\n", message->text.c_str());
-            //     if (StringTools::startsWith(message->text, "/start") || StringTools::startsWith(message->text, "/truth") || !BasicFlag) {
-            //         return;
-            //     }
-            //     bot.getApi().sendMessage(message->chat->id, "Your message is not: " + message->text);
-            // });
-            Storehouse(message);
-            PrimtPLS(message);
+            StoreHouse(message);
         } else {
             return;
         }
-        BasicFlag = false;
+        BasicFarm(message);
     });
 
     bot.getEvents().onCommand("магазин", [&bot](TgBot::Message::Ptr message) {
         ShopFlag = true;
         if(BasicFlag) {
-            return;
-            // bot.getEvents().onAnyMessage([&bot](TgBot::Message::Ptr message) {
-            //     printf("User wrote %s\n", message->text.c_str());
-            //     if (StringTools::startsWith(message->text, "/start") || StringTools::startsWith(message->text, "/truth") || !BasicFlag) {
-            //         return;
-            //     }
-            //     bot.getApi().sendMessage(message->chat->id, "Your message is not: " + message->text);
-            // });
-            Shop(message);
-            PrimtPLS(message);
+            bot.getApi().sendMessage(message->chat->id, "Вы хотите:\n1)купить\n2)продать_семена\n3)продать_овощи\n4)обратно \n");
         } else {
             return;
         }
         BasicFlag = false;
     });
+
+    bot.getEvents().onCommand("купить", [&bot](TgBot::Message::Ptr message) {
+        if(ShopFlag) {
+            ShopOut(message);
+            bot.getApi().sendMessage(message->chat->id, "Введите индекс товара. который хотите купить");
+            ActionScenario = 1;
+            FirstStepInFlag = true;
+        } else {
+            return;
+        }
+    });
+
+    bot.getEvents().onCommand("продать_семена", [&bot](TgBot::Message::Ptr message) {
+        if(ShopFlag) {
+            SellSeedsOut(message);
+            ActionScenario = 2;
+            FirstStepInFlag = true;
+        } else {
+            return;
+        }
+    });
+
+    bot.getEvents().onCommand("продать_овощи", [&bot](TgBot::Message::Ptr message) {
+        if(ShopFlag) {
+            SellVegetables(message);
+            ActionScenario = 3;
+            FirstStepInFlag = true;
+        } else {
+            return;
+        }
+    });
+
+    bot.getEvents().onCommand("обратно", [&bot](TgBot::Message::Ptr message) {
+        if(GardenFlag || ShopFlag) {
+            BasicFarm(message);
+            BasicFlag = true;
+            GardenFlag = false;
+            StorehouseFlag = false;
+            ShopFlag = false;
+            return;
+        } else {
+            return;
+        }
+    });
+
+    bot.getEvents().onCommand("1", [&bot](TgBot::Message::Ptr message) {
+        switch(ActionScenario) {
+            case 1: {
+            if(FirstStepInFlag) {
+                ShopFlag = false;
+                Index = 1;
+                bot.getApi().sendMessage(message->chat->id, "Вы хотите купить:\n1)одно семечко\n2)пять семян\n3)двадцать семян \n");
+                SecondStepInFlag = true;
+                FirstStepInFlag = false;
+                return;
+            } else if(SecondStepInFlag) {
+                Amount = 1;
+                BuyFirstStep(message, Index, Amount);
+                BuySecondStep(message);
+                bot.getApi().sendMessage(message->chat->id, "Вы хотите:\n1)купить\n2)продать_семена\n3)продать_овощи\n4)обратно \n");
+                SecondStepInFlag = false;
+                ShopFlag = true;
+                return;
+            }else {
+                return;
+        }
+    }
+    case 2: {
+        if(FirstStepInFlag) {
+            Index = 1;
+            ShopFlag = false;
+            bot.getApi().sendMessage(message->chat->id, "Вы хотите продать:\n1)одно семечко\n2)пять семян\n3)двадцать семян \n");
+            SecondStepInFlag = true;
+            FirstStepInFlag = false;
+            return;
+        } else if(SecondStepInFlag) {
+            Amount = 1;
+            bot.getApi().sendMessage(message->chat->id, std::to_string(UsedSeedsInSellingSec[0]));
+            SellSeeds(message, Index, Amount);
+            BuySecondStep(message);
+            SecondStepInFlag = false;
+            ShopFlag = true;
+            bot.getApi().sendMessage(message->chat->id, "Вы хотите:\n1)купить\n2)продать_семена\n3)продать_овощи\n4)обратно \n");
+            return;
+        }else {
+            return;
+    }
+    }
+    case 3: {
+        if(FirstStepInFlag) {
+            GardenFlag = false;
+            Index = 1;
+            bot.getApi().sendMessage(message->chat->id, "сколько семян вы хотите посадить:\n1)Одно семечко\n2)Два семечка\n3)Все семена");
+            SecondStepInFlag = true;
+            FirstStepInFlag = false;
+            return;
+        } else if(SecondStepInFlag) {
+            Amount = 1;
+            PlantSeed(message, Index, Amount);
+            Garden(message);
+            SecondStepInFlag = false;
+            GardenFlag = true;
+            return;
+        }else {
+            return;
+    }
+    }
+    }
+    });
+
+    bot.getEvents().onCommand("2", [&bot](TgBot::Message::Ptr message) {
+        switch(ActionScenario) {
+            case 1: {
+            if(FirstStepInFlag) {
+                ShopFlag = false;
+                Index = 2;
+                bot.getApi().sendMessage(message->chat->id, "Вы хотите купить:\n1)одно семечко\n2)пять семян\n3)двадцать семян \n");
+                SecondStepInFlag = true;
+                FirstStepInFlag = false;
+                return;
+            } else if(SecondStepInFlag) {
+                Amount = 5;
+                BuyFirstStep(message, Index, Amount);
+                BuySecondStep(message);
+                SecondStepInFlag = false;
+                ShopFlag = true;
+                bot.getApi().sendMessage(message->chat->id, "Вы хотите:\n1)купить\n2)продать_семена\n3)продать_овощи\n4)обратно \n");
+                return;
+            }else {
+                return;
+        }
+    }
+    case 2: {
+        if(FirstStepInFlag) {
+            ShopFlag = false;
+            Index = 2;
+            bot.getApi().sendMessage(message->chat->id, "Вы хотите продать:\n1)одно семечко\n2)пять семян\n3)двадцать семян \n");
+            SecondStepInFlag = true;
+            FirstStepInFlag = false;
+            return;
+        } else if(SecondStepInFlag) {
+            Amount = 5;
+            SellSeeds(message, Index, Amount);
+            BuySecondStep(message);
+            SecondStepInFlag = false;
+            ShopFlag = true;
+            bot.getApi().sendMessage(message->chat->id, "Вы хотите:\n1)купить\n2)продать_семена\n3)продать_овощи\n4)обратно \n");
+            return;
+        }else {
+            return;
+    }
+    }
+    case 3: {
+        if(FirstStepInFlag) {
+            GardenFlag = false;
+            Index = 2;
+            bot.getApi().sendMessage(message->chat->id, "сколько семян вы хотите посадить:\n1)Одно семечко\n2)Два семечка\n3)Все семена");
+            SecondStepInFlag = true;
+            FirstStepInFlag = false;
+            return;
+        } else if(SecondStepInFlag) {
+            Amount = 2;
+            PlantSeed(message, Index, Amount);
+            Garden(message);
+            SecondStepInFlag = false;
+            GardenFlag = true;
+            return;
+        }else {
+            return;
+    }
+    }
+    }
+    });
+
+    bot.getEvents().onCommand("3", [&bot](TgBot::Message::Ptr message) { //ТУТ ПРОБЛЕМА С ЗАСАЖИВАНИЕМ ВСЕХ СЕМЯН
+        switch(ActionScenario) {
+            case 1: {
+            if(FirstStepInFlag) {
+                ShopFlag = false;
+                Index = 3;
+                bot.getApi().sendMessage(message->chat->id, "Вы хотите купить:\n1)одно семечко\n2)пять семян\n3)двадцать семян \n");
+                SecondStepInFlag = true;
+                FirstStepInFlag = false;
+                return;
+            } else if(SecondStepInFlag) {
+                Amount = 20;
+                BuyFirstStep(message, Index, Amount);
+                BuySecondStep(message);
+                SecondStepInFlag = false;
+                ShopFlag = true;
+                bot.getApi().sendMessage(message->chat->id, "Вы хотите:\n1)купить\n2)продать_семена\n3)продать_овощи\n4)обратно \n");
+                return;
+            }else {
+                return;
+        }
+    }
+    case 2: {
+        if(FirstStepInFlag) {
+            ShopFlag = false;
+            Index = 3;
+            bot.getApi().sendMessage(message->chat->id, "Вы хотите продать:\n1)одно семечко\n2)пять семян\n3)двадцать семян \n");
+            SecondStepInFlag = true;
+            FirstStepInFlag = false;
+            return;
+        } else if(SecondStepInFlag) {
+            Amount = 20;
+            SellSeeds(message, Index, Amount);
+            BuySecondStep(message);
+                SecondStepInFlag = false;
+                ShopFlag = true;
+                bot.getApi().sendMessage(message->chat->id, "Вы хотите:\n1)купить\n2)продать_семена\n3)продать_овощи\n4)обратно \n");
+            return;
+        }else {
+            return;
+    }
+    }
+    case 3: {
+        if(FirstStepInFlag) {
+            GardenFlag = false;
+            Index = 3;
+            bot.getApi().sendMessage(message->chat->id, "сколько семян вы хотите посадить:\n1)Одно семечко\n2)Два семечка\n3)Все семена");
+            SecondStepInFlag = true;
+            FirstStepInFlag = false;
+            return;
+        } else if(SecondStepInFlag) {
+            Amount = AllYouSeed;
+            PlantSeed(message, Index, Amount);
+            Garden(message);
+            SecondStepInFlag = false;
+            GardenFlag = true;
+            return;
+        }else {
+            return;
+    }
+    }
+    }
+    });
+
+    bot.getEvents().onCommand("4", [&bot](TgBot::Message::Ptr message) {
+        switch(ActionScenario) {
+            case 1: {
+            if(FirstStepInFlag) {
+                ShopFlag = false;
+                Index = 4;
+                bot.getApi().sendMessage(message->chat->id, "Вы хотите купить:\n1)одно семечко\n2)пять семян\n3)двадцать семян \n");
+                SecondStepInFlag = true;
+                FirstStepInFlag = false;
+                return;
+            }else {
+                return;
+        }
+    }
+    case 2: {
+        if(FirstStepInFlag) {
+            ShopFlag = false;
+            Index = 4;
+            bot.getApi().sendMessage(message->chat->id, "Вы хотите продать:\n1)одно семечко\n2)пять семян\n3)двадцать семян \n");
+            SecondStepInFlag = true;
+            FirstStepInFlag = false;
+            return;
+        }else {
+            return;
+    }
+    }
+    case 3: {
+        if(FirstStepInFlag) {
+            GardenFlag = false;
+            Index = 4;
+            bot.getApi().sendMessage(message->chat->id, "сколько семян вы хотите посадить:\n1)Одно семечко\n2)Два семечка\n3)Все семена");
+            SecondStepInFlag = true;
+            FirstStepInFlag = false;
+            return;
+        }else {
+            return;
+    }
+    }
+    }
+    });
+
     try {
         printf("Bot username: %s\n", bot.getApi().getMe()->username.c_str());
         TgBot::TgLongPoll longPoll(bot);

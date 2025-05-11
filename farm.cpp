@@ -7,26 +7,9 @@
 #include <cmath>
 #include <iomanip>
 
-int money = 200;
-
-
-int AvailableSeed = 4; //количество доступных семян
-const int MaxAvailableSeed = 7; // максимум семян(для после прокачки)
-
-Seed AllSeeds[MaxAvailableSeed]; // информация семян
-int AllYouSeed = 0;    // всего семян.121
-
-Vegatebles AllVegatables[MaxAvailableSeed]; // информация готовых овощей
-int AllYourVegatables = 0;     // все овощи
-
-int SeedBedAmount = 5;             //количество грядок
-const int MaxSeedBedAmount = 8;        //максимум грядок
-SeedBed AllSeedBeds[MaxSeedBedAmount];  //Инфа
-
-
 void Start(){
     AllSeeds[0].Name = "Семена пшена";    AllSeeds[0].TimeGrowth = 10; AllSeeds[0].BuyCost = 4;  AllSeeds[0].SellCost = 3;  AllSeeds[0].Number = 0;
-    AllSeeds[1].Name = "Семена морковки"; AllSeeds[1].TimeGrowth = 20; AllSeeds[1].BuyCost = 2;  AllSeeds[1].SellCost = 1;  AllSeeds[1].Number = 1;
+    AllSeeds[1].Name = "Семена морковки"; AllSeeds[1].TimeGrowth = 20; AllSeeds[1].BuyCost = 2;  AllSeeds[1].SellCost = 1;  AllSeeds[1].Number = 1;;
     AllSeeds[2].Name = "Семена свеклы";   AllSeeds[2].TimeGrowth = 30; AllSeeds[2].BuyCost = 6;  AllSeeds[2].SellCost = 5;  AllSeeds[2].Number = 2;
     AllSeeds[3].Name = "Семена тыквы";    AllSeeds[3].TimeGrowth = 60; AllSeeds[3].BuyCost = 12; AllSeeds[3].SellCost = 10; AllSeeds[3].Number = 3;
 
@@ -37,8 +20,8 @@ void Start(){
 }
 
 void BasicFarm(TgBot::Message::Ptr message) {
-    TgBot::Bot bot("7614764220:AAGAIgGzIBr5kFpaVnf4YA8QyRlkBbcHj0s");
-    bot.getApi().sendMessage(message->chat->id, "БЛА БЛА БЛА ЛОР\nкyдa пойдем?\n 1) огород\n 2) магазин\n 3) амбар\n 4) выход наружу\n");
+    TgBot::Bot bot("7590778478:AAF_Y2viQaAtczVc6xYu3NphxnFmrJh8vO8");
+    bot.getApi().sendMessage(message->chat->id, "Куда бы вы хотели пойти\n 1) огород\n 2) магазин\n 3) амбар\n 4) выход наружу\n");
     BasicFlag = true;
     GardenFlag = false;
     StorehouseFlag = false;
@@ -46,105 +29,126 @@ void BasicFarm(TgBot::Message::Ptr message) {
 }
 
 
-void Storehouse(TgBot::Message::Ptr message){
-    TgBot::Bot bot("7614764220:AAGAIgGzIBr5kFpaVnf4YA8QyRlkBbcHj0s");
-    std::cout << "Вы амбаре тут хранится ваше имущество, если оно y вас есть)\ny вас\n";
-    std::cout << money << '\n';
+void StoreHouse(TgBot::Message::Ptr message){
+    TgBot::Bot bot("7590778478:AAF_Y2viQaAtczVc6xYu3NphxnFmrJh8vO8");
+    MessageOut = "Вы в амбаре, тут хранится ваше имуществу\ny вас ";
+    MessageOut.append(std::to_string(money));
+    MessageOut.append(" денег \n");
     if (AllYouSeed != 0) {
-        std::cout << "Ваши семена:\n";
+        MessageOut.append("Ваши семена:\n");
         for (int i = 0; i < AvailableSeed; i++) {
             if (AllSeeds[i].amount != 0){
-                std::cout << AllSeeds[i].amount << ": " << AllSeeds[i].Name << '\n';
+                MessageOut.append(std::to_string(AllSeeds[i].amount));
+                MessageOut.append(": ");
+                MessageOut.append(AllSeeds[i].Name);
+                MessageOut.append("\n");
             }
         }
     }
     if (AllYourVegatables != 0) {
-        std::cout << "\nВаши овощи:\n";
+        MessageOut.append("\nВаши овощи:\n");
         for (int i = 0; i < AvailableSeed; i++) {
             if (AllVegatables[i].amount != 0){
-                std::cout << AllVegatables[i].amount << ": " << AllVegatables[i].Name <<'\n'<<'\n';
+                MessageOut.append(std::to_string(AllVegatables[i].amount));
+                MessageOut.append(": " );
+                MessageOut.append(AllVegatables[i].Name);
+                MessageOut.append("\n\n");
             }
         }
     }
+    bot.getApi().sendMessage(message->chat->id, MessageOut);
+    MessageOut.clear();
 }
 
-void shopOut(TgBot::Message::Ptr message) {
-    TgBot::Bot bot("7614764220:AAGAIgGzIBr5kFpaVnf4YA8QyRlkBbcHj0s");
-    const int kLengthColumn = 20;
-    const int kPrecision = 10;
-
-    std::cout << std::setw(15) << "вид" << ' ' << '\n';//<< std::setw(kLengthColumn) << " стоимость семечка (продажа/покупка)" << std::setw(kLengthColumn) << " у вас семечек" << std::setw(kLengthColumn) << " стоимость овоща" << std::setw(kLengthColumn) << " у вас овощей" << std::endl;
-
+void ShopOut(TgBot::Message::Ptr message) {
+    TgBot::Bot bot("7590778478:AAF_Y2viQaAtczVc6xYu3NphxnFmrJh8vO8");
+    MessageOut.append("У вас: \n");
+    MessageOut.append(std::to_string(money));
+    MessageOut.append(" денег \n");
+    MessageOut.append("Ассортимент товаров: \n");
     for (int i = 0; i < AvailableSeed; i++) {
-        std::cout  << std::setw(15) << AllVegatables[i].Name << ' ' << '\n';//<< std::setw(kLengthColumn) << AllSeed[i].SellCost << '/' << AllSeed[i].BuyCost << std::setw(kLengthColumn) << AllSeed[i].amount << std::setw(kLengthColumn) << AllVegatebles[i].SellCost << std::setw(kLengthColumn) << AllVegatebles[i].amount << std::endl;
+        MessageOut.append(std::to_string(i+1));
+        MessageOut.append(") ");
+        MessageOut.append(AllSeeds[i].Name);
+        MessageOut.append(" Цена: ");
+        MessageOut.append(std::to_string(AllSeeds[i].BuyCost));
+        MessageOut.append("\n");
     }
+    bot.getApi().sendMessage(message->chat->id, MessageOut);
+    MessageOut.clear();
 }
 
-void Shop(TgBot::Message::Ptr message) {
-    TgBot::Bot bot("7614764220:AAGAIgGzIBr5kFpaVnf4YA8QyRlkBbcHj0s");
-    while (true) {
-        shopOut(message);
-        bot.getApi().sendMessage(message->chat->id, "Вы хотите:\n1) купить\n2) продать семена\n3) продать овощи\n4) выйти из магазина: \n");
-        //std::cout << "Вы хотите:\n1) купить\n2) продать семена\n3) продать овощи\n4) выйти из магазина: \n";
-        int way = 0;
-        std::cin >> way;
-        switch (way) {
-            case 1:{
-                Buy(message);
-                break;
-            }
-            case 2:{
-                SellSeeds(message);
-                break;
-            }
-            case 3:{
-                SellVegetables(message);
-                break;
-            }
-            case 4:{
-                return;
-                break;
-
-            }
-            default:{
-                std::cout << "ошибка ввода лол или что то другое не так\n";
-            }
-        }
-    }
-}
-
-void Buy(TgBot::Message::Ptr message) {
-    TgBot::Bot bot("7614764220:AAGAIgGzIBr5kFpaVnf4YA8QyRlkBbcHj0s");
-    bot.getApi().sendMessage(message->chat->id, "Введите номер продукта и количество: ");
-    int Index = 0, Amount = 0;
-    std::cin >> Index >> Amount;
-    if (Index > 0 && Index <= AvailableSeed && Amount > 0 && AllSeeds[Index - 1].BuyCost * Amount <= money) {
+void BuyFirstStep(TgBot::Message::Ptr message, int Index, int Amount) { //ПРОВЕРКА НА ОТРИЦАТЕЛЬНЫЕ ДЕНЬГИ
+    TgBot::Bot bot("7590778478:AAF_Y2viQaAtczVc6xYu3NphxnFmrJh8vO8");
         money -= AllSeeds[Index - 1].BuyCost * Amount;
-        AllSeeds[Index - 1].amount += Amount;
-        AllYouSeed += Amount;
-    } else {
-        bot.getApi().sendMessage(message->chat->id, "ошибка ввода лол или что то другое не так");
-    }
+    AllSeeds[Index - 1].amount += Amount;
+    AllYouSeed += Amount;
     return;
 }
 
-void SellSeeds(TgBot::Message::Ptr message) {
-    TgBot::Bot bot("7614764220:AAGAIgGzIBr5kFpaVnf4YA8QyRlkBbcHj0s");
-    bot.getApi().sendMessage(message->chat->id, "Введите номер продукта и количество: ");
-    int Index = 0, Amount = 0;
-    std::cin >> Index >> Amount;
-    if (Index > 0 && Index <= AvailableSeed && Amount > 0 && AllSeeds[Index - 1].amount >= Amount) {
-        money += AllSeeds[Index - 1].BuyCost * Amount;
-        AllSeeds[Index - 1].amount -= Amount;
+void BuySecondStep(TgBot::Message::Ptr message) {
+    TgBot::Bot bot("7590778478:AAF_Y2viQaAtczVc6xYu3NphxnFmrJh8vO8");
+    MessageOut.append("У вас: \n");
+    MessageOut.append(std::to_string(money));
+    MessageOut.append(" денег \n");
+    bot.getApi().sendMessage(message->chat->id, MessageOut);
+    MessageOut.clear();
+    return;
+}
+
+int* SellSeedsOut(TgBot::Message::Ptr message) {
+    TgBot::Bot bot("7590778478:AAF_Y2viQaAtczVc6xYu3NphxnFmrJh8vO8");
+    int schet = 0;
+    int SchetAll = 1;
+    if (AllYouSeed != 0) {
+        MessageOut.append("Ваши семена(введите их индекс):\n");
+        for (int i = 0; i < AvailableSeed; i++) {
+            if (AllSeeds[i].amount != 0){
+                UsedSeedsInSellingSec[schet] = i;
+                MessageOut.append(std::to_string(SchetAll));
+                MessageOut.append(") ");
+                MessageOut.append(AllSeeds[i].Name);
+                MessageOut.append(": ");
+                MessageOut.append(std::to_string(AllSeeds[i].amount));
+                MessageOut.append("\n");
+                ++schet;
+                ++SchetAll;
+            }
+        }
+    }
+    bot.getApi().sendMessage(message->chat->id, MessageOut);
+    MessageOut.clear();
+    return UsedSeedsInSellingSec;
+}
+
+void SellSeeds(TgBot::Message::Ptr message, int Index, int Amount) {
+    TgBot::Bot bot("7590778478:AAF_Y2viQaAtczVc6xYu3NphxnFmrJh8vO8");
+    if (Index > 0 && Index <= AvailableSeed && Amount > 0 && AllSeeds[UsedSeedsInSellingSec[Index - 1]].amount >= Amount) {
+        money += AllSeeds[UsedSeedsInSellingSec[Index - 1]].BuyCost * Amount;
+        AllSeeds[UsedSeedsInSellingSec[Index - 1]].amount -= Amount;
         AllYouSeed -= Amount;
     } else {
-        bot.getApi().sendMessage(message->chat->id, "ошибка ввода лол или что то другое не так");    }
-    return;
+        bot.getApi().sendMessage(message->chat->id, "ошибка ввода ");
+    }
 }
 
 void SellVegetables(TgBot::Message::Ptr message) {
-    TgBot::Bot bot("7614764220:AAGAIgGzIBr5kFpaVnf4YA8QyRlkBbcHj0s");
-    bot.getApi().sendMessage(message->chat->id,"Введите номер продукта и количество: ");
+    TgBot::Bot bot("7590778478:AAF_Y2viQaAtczVc6xYu3NphxnFmrJh8vO8");
+    if (AllYourVegatables != 0) {
+        MessageOut.append("\nВаши овощи:\n");
+        for (int i = 0; i < AvailableSeed; i++) {
+            if (AllVegatables[i].amount != 0){
+                MessageOut.append(std::to_string(AllVegatables[i].amount));
+                MessageOut.append(": " );
+                MessageOut.append(AllVegatables[i].Name);
+                MessageOut.append("\n\n");
+            }
+        }
+    }
+    bot.getApi().sendMessage(message->chat->id, MessageOut);
+    MessageOut.clear();
+
+    bot.getApi().sendMessage(message->chat->id,"Введите номер овоща, который вы хотите продать, по порядку и количество: ");
     int Index = 0, Amount = 0;
     std::cin >> Index >> Amount;
     if (Index > 0 && Index <= AvailableSeed && Amount > 0 && AllVegatables[Index - 1].amount >= Amount) {
@@ -152,125 +156,71 @@ void SellVegetables(TgBot::Message::Ptr message) {
         AllVegatables[Index - 1].amount -= Amount;
         AllYourVegatables -= Amount;
     } else {
-        bot.getApi().sendMessage(message->chat->id, "ошибка ввода лол или что то другое не так");
-    }
-}
-
-void gardenOut(TgBot::Message::Ptr message) {
-    TgBot::Bot bot("7614764220:AAGAIgGzIBr5kFpaVnf4YA8QyRlkBbcHj0s");
-    bot.getApi().sendMessage(message->chat->id, "Вы в грядках (совет дня: Не выращивайте конаплю)\n Вот ващи грядки\n");
-    //std::cout << "Вы в грядках (совет дня: Не выращивайте конаплю)\n Вот ващи грядки\n";
-    time_t timeNow = time (NULL);
-    for(int i = 0; i < SeedBedAmount; i++){
-        if (AllSeedBeds[i].buse) {
-            if (AllSeeds[AllSeedBeds[i].NumberSeed].TimeGrowth - timeNow + AllSeedBeds[i].TimeLanding > 0){
-                bot.getApi().sendMessage(message->chat->id, "🪺  ");
-                bot.getApi().sendMessage(message->chat->id, AllSeeds[AllSeedBeds[i].NumberSeed].Name);
-                bot.getApi().sendMessage(message->chat->id, " осталось до полного созревания ");
-                bot.getApi().sendMessage(message->chat->id, std::to_string(AllSeeds[AllSeedBeds[i].NumberSeed].TimeGrowth - timeNow + AllSeedBeds[i].TimeLanding));
-                //std::cout << "🪺  " << AllSeeds[AllSeedBeds[i].NumberSeed].Name << " осталось до полного созревания " << AllSeeds[AllSeedBeds[i].NumberSeed].TimeGrowth - timeNow + AllSeedBeds[i].TimeLanding << '\n';
-            } else {
-                bot.getApi().sendMessage(message->chat->id, "🪺  ");
-                bot.getApi().sendMessage(message->chat->id, AllSeeds[AllSeedBeds[i].NumberSeed].Name);
-                bot.getApi().sendMessage(message->chat->id, " созрел\n");
-                //std::cout << "🪺  " << AllSeeds[AllSeedBeds[i].NumberSeed].Name << " созрел\n";
-            }
-        }else {
-            bot.getApi().sendMessage(message->chat->id, "🪹 \n");
-            //std::cout << "🪹 \n";
-        }
+        bot.getApi().sendMessage(message->chat->id, "ошибка ввода");
     }
 }
 
 void Garden(TgBot::Message::Ptr message){
-    TgBot::Bot bot("7614764220:AAGAIgGzIBr5kFpaVnf4YA8QyRlkBbcHj0s");
-    //while(true) {
-        gardenOut(message);
-        if (AllYouSeed != 0) {
-            bot.getApi().sendMessage(message->chat->id, "семена:");
-            int nomber = 1;
-            for (int i = 0; i < AvailableSeed; i++) {
-                if (AllSeeds[i].amount != 0){
-                    bot.getApi().sendMessage(message->chat->id, std::to_string(nomber));
-                    bot.getApi().sendMessage(message->chat->id,  ") " );
-                    bot.getApi().sendMessage(message->chat->id,  AllSeeds[i].Name);
-                    bot.getApi().sendMessage(message->chat->id,  std::to_string(AllSeeds[i].amount));
-                    std::cout << nomber << ") " << AllSeeds[i].Name << ' ' << AllSeeds[i].amount << '\n';
-                    nomber++;
-                }
+    TgBot::Bot bot("7590778478:AAF_Y2viQaAtczVc6xYu3NphxnFmrJh8vO8");
+    MessageOut.append("Вы вышли в огород\nВот ваши грядки\n");
+    time_t timeNow = time (NULL);
+    for(int i = 0; i < SeedBedAmount; i++){
+        if (AllSeedBeds[i].buse) {
+            if (AllSeeds[AllSeedBeds[i].NumberSeed].TimeGrowth - timeNow + AllSeedBeds[i].TimeLanding > 0){
+                MessageOut.append("🪺  ");
+                MessageOut.append( AllSeeds[AllSeedBeds[i].NumberSeed].Name);
+                MessageOut.append(" осталось до полного созревания ");
+                MessageOut.append(std::to_string(AllSeeds[AllSeedBeds[i].NumberSeed].TimeGrowth - timeNow + AllSeedBeds[i].TimeLanding));
+                MessageOut.append("\n");
+            } else {
+                MessageOut.append("🪺  ");
+                MessageOut.append(AllSeeds[AllSeedBeds[i].NumberSeed].Name);
+                MessageOut.append(" созрели\n");
             }
-            std::cout << "\n";
-        } else {
-            bot.getApi().sendMessage(message->chat->id, "У вас нет семян , потому что их надо купить");
+        }else {
+            MessageOut.append("🪹 \n");
         }
-
-        //std::cout << "Что вы хотите сделать ?\n 1)обновить\n 2)посадить семена\n 3)собрать все\n 4)обратно\n";
-        bot.getApi().sendMessage(message->chat->id,  "Что вы хотите сделать ?\n 1)обновить\n 2)посадить_семена\n 3)собрать все\n 4)обратно\n");
-        int way = 0;
-        //std::cin >> way;
-        // switch (way) {
-        //     case 1:{
-        //         break;
-        //     }
-        //     case 2:{
-        //         PlantSeed(message);
-        //         break;
-        //     }
-        //     case 3:{
-        //         for(int i = 0; i < SeedBedAmount; i++) {
-        //             Storehouse(message);
-        //             if (AllSeedBeds[i].buse && AllSeeds[AllSeedBeds[i].NumberSeed].TimeGrowth - time (NULL) + AllSeedBeds[i].TimeLanding <= 0) {
-        //                 AllSeedBeds[i].buse = false;
-        //                 AllVegatables[AllSeeds[AllSeedBeds[i].NumberSeed].Number].amount++;
-        //                 AllYourVegatables++;
-        //             }
-        //         }
-        //         break;
-        //     }
-        //     case 4:{
-        //         return ;
-        //     }
-        //     default:{
-        //         std::cout << "что то не так \n";
-        //         break;
-        //     }
-        //}
-    //}
+    }
+    bot.getApi().sendMessage(message->chat->id, MessageOut);
+    MessageOut.clear();
+    bot.getApi().sendMessage(message->chat->id,  "Что вы хотите сделать ?\n 1)проверить_растения\n 2)посадить_семена\n 3)собрать_всё\n 4)обратно\n");
 }
 
-void PlantSeed(TgBot::Message::Ptr message) {
-    TgBot::Bot bot("7614764220:AAGAIgGzIBr5kFpaVnf4YA8QyRlkBbcHj0s");
-    int Index = 0, Amount = 0;
-
-    bot.getApi().sendMessage(message->chat->id, "какие семена(номер) вы хотите посадить ?\n");
-    std::cin >> Index;
-    bot.getApi().sendMessage(message->chat->id, "сколько семян(число) вы хотите посадить ?\n");
-    std::cin >> Amount;
-    Index--;
-    if (Index < 0) {
-        return;
-    }
-    for (int i = 0; i < AvailableSeed; i++) {
-        if (AllSeeds[i].amount != 0 && Index != 0){
-            Index--;
-        } else if (AllSeeds[i].amount != 0) {
-            Index = i;
-            return;
+void PlantSeedOut(TgBot::Message::Ptr message) {
+    TgBot::Bot bot("7590778478:AAF_Y2viQaAtczVc6xYu3NphxnFmrJh8vO8");
+    if (AllYouSeed != 0) {
+        MessageOut.append("семена:\n");
+        int Number = 1;
+        int schet = 0;
+        for (int i = 0; i < AvailableSeed; i++) {
+            if (AllSeeds[i].amount != 0){
+                UsedSeedsInSellingSec[schet] = i;
+                MessageOut = std::to_string(Number);
+                MessageOut.append(") ");
+                MessageOut.append(AllSeeds[i].Name);
+                MessageOut.append(" ");
+                MessageOut.append(std::to_string(AllSeeds[i].amount));
+                bot.getApi().sendMessage(message->chat->id, MessageOut);
+                MessageOut.clear();
+                Number++;
+            }
         }
+    } else {
+        bot.getApi().sendMessage(message->chat->id, "У вас нет семян , потому что их надо купить");
     }
-    std::cout << Index << '\n';
+    bot.getApi().sendMessage(message->chat->id, "какие семена(номер) вы хотите посадить ?\n");
+}
 
-    if (AllSeeds[Index].amount == 0) {
-        bot.getApi().sendMessage(message->chat->id, "Вы чо ,у вас нет таких семян\n");
-        return;
-    }
+void PlantSeed(TgBot::Message::Ptr message, int Index, int Amount) {
+    TgBot::Bot bot("7590778478:AAF_Y2viQaAtczVc6xYu3NphxnFmrJh8vO8");
+    --Index;
     for(int i = 0; Amount > 0 && i < SeedBedAmount; i++){
-        if (!AllSeedBeds[i].buse && AllSeeds[Index].amount > 0){
+        if (!AllSeedBeds[i].buse && AllSeeds[UsedSeedsInSellingSec[Index]].amount > 0){
             AllSeedBeds[i].buse = true;
-            AllSeedBeds[i].NumberSeed = Index;
+            AllSeedBeds[i].NumberSeed = UsedSeedsInSellingSec[Index];
             AllSeedBeds[i].TimeLanding = time (NULL);
             Amount--;
-            AllSeeds[Index].amount--;
+            AllSeeds[UsedSeedsInSellingSec[Index]].amount--;
             AllYouSeed--;
         }
     }
