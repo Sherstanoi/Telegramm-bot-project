@@ -2,13 +2,8 @@
 #include <tgbot/tgbot.h>
 #include "farm.h"
 
-void PrimtPLS(TgBot::Message::Ptr message) {
-    TgBot::Bot bot("7590778478:AAF_Y2viQaAtczVc6xYu3NphxnFmrJh8vO8");
-    bot.getApi().sendMessage(message->chat->id, "Your message is not not: ");
-    BasicFlag = true;
-}
 int main() {
-    TgBot::Bot bot("7590778478:AAF_Y2viQaAtczVc6xYu3NphxnFmrJh8vO8");
+    TgBot::Bot bot("7590778478:AAGfg-6Q_PofDaS4D1tFB8F105M9p72gkrQ");
     bot.getEvents().onCommand("start", [&bot](TgBot::Message::Ptr message) {
         bot.getApi().sendMessage(message->chat->id,"Вы всегда хотели переехать в уединенное место, поэтому вы долго копили деньги и купили домик в деревушке.И вот,наконец, вы приезжаете к своему новому дому");
         Start();
@@ -50,8 +45,8 @@ int main() {
 
     bot.getEvents().onCommand("собрать_всё", [&bot](TgBot::Message::Ptr message) {
         if(GardenFlag) {
+            CollectAllVegatables(message);
             Garden(message);
-            PrimtPLS(message);
         } else {
             return;
         }
@@ -102,8 +97,8 @@ int main() {
 
     bot.getEvents().onCommand("продать_овощи", [&bot](TgBot::Message::Ptr message) {
         if(ShopFlag) {
-            SellVegetables(message);
-            ActionScenario = 3;
+            SellVegetablesOut(message);
+            ActionScenario = 4;
             FirstStepInFlag = true;
         } else {
             return;
@@ -175,7 +170,7 @@ int main() {
             FirstStepInFlag = false;
             return;
         } else if(SecondStepInFlag) {
-            Amount = 1;
+            Amount = SeedBedAmount;
             PlantSeed(message, Index, Amount);
             Garden(message);
             SecondStepInFlag = false;
@@ -184,6 +179,31 @@ int main() {
         }else {
             return;
     }
+    }
+    case 4: {
+        if(FirstStepInFlag) {
+            Index = 1;
+            ShopFlag = false;
+            bot.getApi().sendMessage(message->chat->id, "Вы хотите продать:\n1)один овощ\n2)пять овощей\n3)двадцать овощей \n");
+            SecondStepInFlag = true;
+            FirstStepInFlag = false;
+            return;
+        } else if(SecondStepInFlag) {
+            Amount = 1;
+            if(AllYourVegatables >= Amount) {
+            bot.getApi().sendMessage(message->chat->id, std::to_string(UsedSeedsInSellingSec[0]));
+            SellSeeds(message, Index, Amount);
+            BuySecondStep(message);
+            SecondStepInFlag = false;
+            ShopFlag = true;
+            bot.getApi().sendMessage(message->chat->id, "Вы хотите:\n1)купить\n2)продать_семена\n3)продать_овощи\n4)обратно \n");
+            return;
+            } else {
+            return;
+            }
+        }else {
+            return;
+        }
     }
     }
     });
@@ -245,6 +265,31 @@ int main() {
             SecondStepInFlag = false;
             GardenFlag = true;
             return;
+        }else {
+            return;
+    }
+    }
+    case 4: {
+        if(FirstStepInFlag) {
+            ShopFlag = false;
+            Index = 2;
+            bot.getApi().sendMessage(message->chat->id, "Вы хотите продать:\n1)один овощь\n2)пять овощей\n3)двадцать овощей \n");
+            SecondStepInFlag = true;
+            FirstStepInFlag = false;
+            return;
+        } else if(SecondStepInFlag) {
+            Amount = 5;
+            if(AllYourVegatables >= Amount) {
+                bot.getApi().sendMessage(message->chat->id, std::to_string(UsedSeedsInSellingSec[0]));
+                SellSeeds(message, Index, Amount);
+                BuySecondStep(message);
+                SecondStepInFlag = false;
+                ShopFlag = true;
+                bot.getApi().sendMessage(message->chat->id, "Вы хотите:\n1)купить\n2)продать_семена\n3)продать_овощи\n4)обратно \n");
+                return;
+                } else {
+                return;
+                }
         }else {
             return;
     }
@@ -313,6 +358,31 @@ int main() {
             return;
     }
     }
+    case 4: {
+        if(FirstStepInFlag) {
+            ShopFlag = false;
+            Index = 3;
+            bot.getApi().sendMessage(message->chat->id, "Вы хотите продать:\n1)один овощь\n2)пять овощей\n3)двадцать овощей \n");
+            SecondStepInFlag = true;
+            FirstStepInFlag = false;
+            return;
+        } else if(SecondStepInFlag) {
+            Amount = 20;
+            if(AllYourVegatables >= Amount) {
+                bot.getApi().sendMessage(message->chat->id, std::to_string(UsedSeedsInSellingSec[0]));
+                SellSeeds(message, Index, Amount);
+                BuySecondStep(message);
+                SecondStepInFlag = false;
+                ShopFlag = true;
+                bot.getApi().sendMessage(message->chat->id, "Вы хотите:\n1)купить\n2)продать_семена\n3)продать_овощи\n4)обратно \n");
+                return;
+                } else {
+                return;
+                }
+        }else {
+            return;
+    }
+    }
     }
     });
 
@@ -347,6 +417,18 @@ int main() {
             GardenFlag = false;
             Index = 4;
             bot.getApi().sendMessage(message->chat->id, "сколько семян вы хотите посадить:\n1)Одно семечко\n2)Два семечка\n3)Все семена");
+            SecondStepInFlag = true;
+            FirstStepInFlag = false;
+            return;
+        }else {
+            return;
+    }
+    }
+    case 4: {
+        if(FirstStepInFlag) {
+            ShopFlag = false;
+            Index = 4;
+            bot.getApi().sendMessage(message->chat->id, "Вы хотите продать:\n1)одно семечко\n2)пять семян\n3)двадцать семян \n");
             SecondStepInFlag = true;
             FirstStepInFlag = false;
             return;

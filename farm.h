@@ -35,14 +35,15 @@ void BasicFarm(TgBot::Message::Ptr message);
 void Garden(TgBot::Message::Ptr message);
 void PlantSeedOut(TgBot::Message::Ptr message);
 void PlantSeed(TgBot::Message::Ptr message, int Index, int Amount);
-void CollectAll(TgBot::Message::Ptr message); //АЛОООООООО ГДЕЕЕЕ
+void CollectAllVegatables(TgBot::Message::Ptr message);
 
 void ShopOut(TgBot::Message::Ptr message);
 void BuyFirstStep(TgBot::Message::Ptr message,int Index, int Amount);
 void BuySecondStep(TgBot::Message::Ptr message);
-int* SellSeedsOut(TgBot::Message::Ptr message);
+void SellSeedsOut(TgBot::Message::Ptr message);
 void SellSeeds(TgBot::Message::Ptr message, int Index, int Amount);
-void SellVegetables(TgBot::Message::Ptr message);
+void SellVegetablesOut(TgBot::Message::Ptr message);
+void SellVegetables(TgBot::Message::Ptr message, int Index, int Amount);
 
 void Return();
 
@@ -69,7 +70,8 @@ namespace {
     int AllYouSeed = 0;    // всего семян.121
 
     Vegatebles AllVegatables[MaxAvailableSeed]; // информация готовых овощей
-    int AllYourVegatables = 0;     // все овощи
+    int AllYourVegatables = 0;  // все овощи
+    const int MaxAvailableVegatables = 100;
 
     int SeedBedAmount = 5;             //количество грядок
     const int MaxSeedBedAmount = 8;        //максимум грядок
@@ -79,6 +81,7 @@ namespace {
     int Index; //Индекс какого-либо продукта при покупке или продаже
     int Amount; //Количество какого-либо продукта при продаже
 
-    int UsedSeedsInSelling[] = {};
     int UsedSeedsInSellingSec[MaxAvailableSeed] = {};
+    int UsedVegetablesInSelling[MaxAvailableVegatables] = {};
+
     }
