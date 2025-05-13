@@ -191,8 +191,7 @@ int main() {
         } else if(SecondStepInFlag) {
             Amount = 1;
             if(AllYourVegatables >= Amount) {
-            bot.getApi().sendMessage(message->chat->id, std::to_string(UsedSeedsInSellingSec[0]));
-            SellSeeds(message, Index, Amount);
+            SellVegetables(message, Index, Amount);
             BuySecondStep(message);
             SecondStepInFlag = false;
             ShopFlag = true;
@@ -280,8 +279,7 @@ int main() {
         } else if(SecondStepInFlag) {
             Amount = 5;
             if(AllYourVegatables >= Amount) {
-                bot.getApi().sendMessage(message->chat->id, std::to_string(UsedSeedsInSellingSec[0]));
-                SellSeeds(message, Index, Amount);
+                SellVegetables(message, Index, Amount);
                 BuySecondStep(message);
                 SecondStepInFlag = false;
                 ShopFlag = true;
@@ -369,8 +367,7 @@ int main() {
         } else if(SecondStepInFlag) {
             Amount = 20;
             if(AllYourVegatables >= Amount) {
-                bot.getApi().sendMessage(message->chat->id, std::to_string(UsedSeedsInSellingSec[0]));
-                SellSeeds(message, Index, Amount);
+                SellVegetables(message, Index, Amount);
                 BuySecondStep(message);
                 SecondStepInFlag = false;
                 ShopFlag = true;
